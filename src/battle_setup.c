@@ -42,6 +42,10 @@
 #include "field_screen_effect.h"
 #include "data.h"
 #include "vs_seeker.h"
+#include "wild_encounter.h"
+#include "event_object_movement.h"
+#include "script.h"
+#include "string_util.h"
 #include "item.h"
 #include "script.h"
 #include "field_name_box.h"
@@ -236,10 +240,46 @@ const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
 
 #define tState data[0]
 #define tTransition data[1]
+#define tCurvelockeBSkipped data[2]
+
+extern const u8 EventScript_CurvelockeDodged[];
+
+static bool32 Curvelocke_IsEncounterSkippable(void)
+{
+    return (gMain.savedCallback == CB2_EndWildBattle)
+        && !(gBattleTypeFlags & (
+              BATTLE_TYPE_ROAMER
+            | BATTLE_TYPE_GHOST
+            | BATTLE_TYPE_PYRAMID
+            | BATTLE_TYPE_PIKE
+            | BATTLE_TYPE_INGAME_PARTNER
+            | BATTLE_TYPE_MULTI))
+        && !gIsFishingEncounter;
+}
+
+static bool32 Curvelocke_FollowerOutspeedsWild(void)
+{
+    struct Pokemon *lead = GetFirstLiveMon();
+    if (lead == NULL)
+        return FALSE;
+    return GetMonData(lead, MON_DATA_SPEED)
+         > GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPEED);
+}
 
 static void Task_BattleStart(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
+
+    // Curvelocke Rule 2: B during transition cancels skippable wild encounters
+    // when the field-follower (first alive non-egg party mon) outspeeds the wild.
+    if (!tCurvelockeBSkipped
+        && Curvelocke_IsEncounterSkippable()
+        && JOY_NEW(B_BUTTON)
+        && Curvelocke_FollowerOutspeedsWild())
+    {
+        tCurvelockeBSkipped = TRUE;
+        Curvelocke_CancelBattleTransition();
+    }
 
     switch (tState)
     {
@@ -254,6 +294,19 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
+            if (tCurvelockeBSkipped)
+            {
+                gBattleTypeFlags = 0;
+                gIsFishingEncounter = FALSE;
+                GetMonData(GetFirstLiveMon(), MON_DATA_NICKNAME, gStringVar1);
+                ScriptContext_SetupScript(EventScript_CurvelockeDodged);
+                SetMainCallback2(CB2_ReturnToField);
+                gFieldCallback = FieldCB_ContinueScriptHandleMusic;
+                RestartWildEncounterImmunitySteps();
+                ClearPoisonStepCounter();
+                DestroyTask(taskId);
+                return;
+            }
             PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);

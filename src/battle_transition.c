@@ -1031,6 +1031,13 @@ bool8 IsBattleTransitionDone(void)
     }
 }
 
+void Curvelocke_CancelBattleTransition(void)
+{
+    u8 taskId = FindTaskIdByFunc(Task_BattleTransition);
+    if (taskId != TASK_NONE)
+        gTasks[taskId].data[15] = TRUE; // tTransitionDone — next IsBattleTransitionDone() poll cleans up
+}
+
 static void LaunchBattleTransitionTask(u8 transitionId)
 {
     u8 taskId = CreateTask(Task_BattleTransition, 2);
