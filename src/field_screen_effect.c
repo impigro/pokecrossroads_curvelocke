@@ -93,16 +93,17 @@ static void FillPalBufferBlack(void)
 
 void WarpFadeInScreen(void)
 {
+    // Curvelocke QoL: delay -2 doubles deltaY so the warp fade takes ~8 frames instead of 16.
     enum MapType previousMapType = GetLastUsedWarpMapType();
     switch (GetMapPairFadeFromType(previousMapType, GetCurrentMapType()))
     {
     case 0:
         FillPalBufferBlack();
-        FadeScreen(FADE_FROM_BLACK, 0);
+        FadeScreen(FADE_FROM_BLACK, -2);
         break;
     case 1:
         FillPalBufferWhite();
-        FadeScreen(FADE_FROM_WHITE, 0);
+        FadeScreen(FADE_FROM_WHITE, -2);
     }
 }
 
@@ -120,14 +121,15 @@ void FadeInFromBlack(void)
 
 void WarpFadeOutScreen(void)
 {
+    // Curvelocke QoL: delay -2 doubles deltaY so the warp fade takes ~8 frames instead of 16.
     enum MapType currentMapType = GetCurrentMapType();
     switch (GetMapPairFadeToType(currentMapType, GetDestinationWarpMapHeader()->mapType))
     {
     case 0:
-        FadeScreen(FADE_TO_BLACK, 0);
+        FadeScreen(FADE_TO_BLACK, -2);
         break;
     case 1:
-        FadeScreen(FADE_TO_WHITE, 0);
+        FadeScreen(FADE_TO_WHITE, -2);
     }
 }
 
