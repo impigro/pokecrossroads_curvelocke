@@ -4312,6 +4312,14 @@ static void Cmd_getexp(void)
                             gBattleStruct->battlerExpReward = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
+                    // Curvelocke Rule 1: no XP from wild defeats/catches when recipient outlevels the foe
+                    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                        && GetMonData(&gParties[B_TRAINER_0][*expMonId], MON_DATA_LEVEL)
+                           > gBattleMons[gBattlerFainted].level)
+                    {
+                        gBattleStruct->battlerExpReward = 0;
+                    }
+
                     if (IsTradedMon(&gParties[B_TRAINER_0][*expMonId]))
                     {
                         // check if the Pokémon doesn't belong to the player
