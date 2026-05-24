@@ -223,84 +223,87 @@ static const union AnimCmd sAnim_FaceEast2F_Asym[] =
     ANIMCMD_JUMP(0),
 };
 
+// Curvelocke QoL: walk anim durations scaled to match the 9-frame walk step
+// (was 16). Original ratios: Go* = 32/16 = 2 tiles/cycle; Go*2F = 24/16 = 1.5.
+// New: Go* = 18/9 = 2; Go*2F = 14/9 ~= 1.56. Keeps the leg cycle legible at 1.78x walk.
 static const union AnimCmd sAnim_GoSouth[] =
 {
-    ANIMCMD_FRAME(3, 8),
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(4, 8),
-    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_FRAME(0, 5),
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_FRAME(0, 5),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoSouth2F[] =
 {
-    ANIMCMD_FRAME(0, 6),
-    ANIMCMD_FRAME(1, 6),
-    ANIMCMD_FRAME(1, 6),
-    ANIMCMD_FRAME(0, 6),
+    ANIMCMD_FRAME(0, 3),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(1, 3),
+    ANIMCMD_FRAME(0, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoNorth[] =
 {
-    ANIMCMD_FRAME(5, 8),
-    ANIMCMD_FRAME(1, 8),
-    ANIMCMD_FRAME(6, 8),
-    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_FRAME(1, 5),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_FRAME(1, 5),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoNorth2F[] =
 {
-    ANIMCMD_FRAME(2, 6),
-    ANIMCMD_FRAME(3, 6),
-    ANIMCMD_FRAME(3, 6),
-    ANIMCMD_FRAME(2, 6),
+    ANIMCMD_FRAME(2, 3),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(2, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoWest[] =
 {
-    ANIMCMD_FRAME(7, 8),
-    ANIMCMD_FRAME(2, 8),
-    ANIMCMD_FRAME(8, 8),
-    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(7, 4),
+    ANIMCMD_FRAME(2, 5),
+    ANIMCMD_FRAME(8, 4),
+    ANIMCMD_FRAME(2, 5),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoWest2F[] =
 {
-    ANIMCMD_FRAME(4, 6),
-    ANIMCMD_FRAME(5, 6),
-    ANIMCMD_FRAME(5, 6),
-    ANIMCMD_FRAME(4, 6),
+    ANIMCMD_FRAME(4, 3),
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_FRAME(5, 3),
+    ANIMCMD_FRAME(4, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoEast[] =
 {
-    ANIMCMD_FRAME(7, 8, .hFlip = TRUE),
-    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
-    ANIMCMD_FRAME(8, 8, .hFlip = TRUE),
-    ANIMCMD_FRAME(2, 8, .hFlip = TRUE),
+    ANIMCMD_FRAME(7, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 5, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(2, 5, .hFlip = TRUE),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoEast2F[] =
 {
-    ANIMCMD_FRAME(4, 6, .hFlip = TRUE),
-    ANIMCMD_FRAME(5, 6, .hFlip = TRUE),
-    ANIMCMD_FRAME(5, 6, .hFlip = TRUE),
-    ANIMCMD_FRAME(4, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(4, 3, .hFlip = TRUE),
+    ANIMCMD_FRAME(5, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(5, 3, .hFlip = TRUE),
+    ANIMCMD_FRAME(4, 4, .hFlip = TRUE),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_GoEast2F_Asym[] =
 {
-    ANIMCMD_FRAME(6, 6),
-    ANIMCMD_FRAME(7, 6),
-    ANIMCMD_FRAME(7, 6),
-    ANIMCMD_FRAME(6, 6),
+    ANIMCMD_FRAME(6, 3),
+    ANIMCMD_FRAME(7, 4),
+    ANIMCMD_FRAME(7, 3),
+    ANIMCMD_FRAME(6, 4),
     ANIMCMD_JUMP(0),
 };
 

@@ -10598,25 +10598,23 @@ static void SetSpriteDataForNormalStep(struct Sprite *sprite, enum Direction dir
 
 typedef void (*SpriteStepFunc)(struct Sprite *sprite, enum Direction direction);
 
-// Curvelocke QoL: step tables compressed to ~1.25x speed across walk/run/bike.
+// Curvelocke QoL: step tables compressed for snappier overworld movement.
 // Each tile is 16 px so total displacement per table must still sum to 16.
-// Frame counts: NORMAL 16->13 (1.23x), FAST_1 8->6 (1.33x), FAST_2 6->5 (1.2x), FASTER 4->3 (1.33x).
-// Tables are shared with NPCs by design -- scripted NPC walks also speed up, matching the snappier player feel.
-// Conservative ratio chosen to keep leg-animation cycles legible (previous 1.5x froze the run anim).
+// Frame counts: NORMAL 16->9 (1.78x), FAST_1 8->6 (1.33x), FAST_2 6->5 (1.2x), FASTER 4->3 (1.33x).
+// Walk is intentionally much faster than run/bike per user preference.
+// Tables are shared with NPCs by design -- scripted NPC walks also speed up.
+// Note: anim-cmd cycles in object_event_anims.h must be scaled in lockstep
+// or the leg animation freezes (see sAnim_Go* / sAnim_Run* edits).
 static const SpriteStepFunc sStep1Funcs[] = {
     Step1,
-    Step1,
-    Step1,
+    Step2,
+    Step2,
     Step2,
     Step1,
-    Step1,
-    Step1,
     Step2,
-    Step1,
-    Step1,
-    Step1,
     Step2,
-    Step1,
+    Step2,
+    Step2,
 };
 
 static const SpriteStepFunc sStep2Funcs[] = {
