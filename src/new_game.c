@@ -227,6 +227,9 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+#if I_EXP_SHARE_FLAG != 0
+    FlagSet(I_EXP_SHARE_FLAG); // Curvelocke Rule 3: Gen 6+ EXP Share defaults to ON
+#endif
 }
 
 static void ResetMiniGamesRecords(void)

@@ -13,8 +13,10 @@
 #include "text.h"
 #include "text_window.h"
 #include "window.h"
+#include "event_data.h"
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
+#include "config/item.h"
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -23,6 +25,7 @@
 #define tSound data[4]
 #define tButtonMode data[5]
 #define tWindowFrameType data[6]
+#define tExpShare data[7]
 
 enum
 {
@@ -32,6 +35,7 @@ enum
     MENUITEM_SOUND,
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
+    MENUITEM_EXPSHARE,
     MENUITEM_CANCEL,
     MENUITEM_COUNT,
 };
@@ -42,12 +46,15 @@ enum
     WIN_OPTIONS
 };
 
-#define YPOS_TEXTSPEED    (MENUITEM_TEXTSPEED * 16)
-#define YPOS_BATTLESCENE  (MENUITEM_BATTLESCENE * 16)
-#define YPOS_BATTLESTYLE  (MENUITEM_BATTLESTYLE * 16)
-#define YPOS_SOUND        (MENUITEM_SOUND * 16)
-#define YPOS_BUTTONMODE   (MENUITEM_BUTTONMODE * 16)
-#define YPOS_FRAMETYPE    (MENUITEM_FRAMETYPE * 16)
+// Curvelocke Rule 3: items packed 14px apart (instead of 16) to fit 8 entries in the existing 14-tile-tall window without resizing.
+#define MENUITEM_HEIGHT   14
+#define YPOS_TEXTSPEED    (MENUITEM_TEXTSPEED * MENUITEM_HEIGHT)
+#define YPOS_BATTLESCENE  (MENUITEM_BATTLESCENE * MENUITEM_HEIGHT)
+#define YPOS_BATTLESTYLE  (MENUITEM_BATTLESTYLE * MENUITEM_HEIGHT)
+#define YPOS_SOUND        (MENUITEM_SOUND * MENUITEM_HEIGHT)
+#define YPOS_BUTTONMODE   (MENUITEM_BUTTONMODE * MENUITEM_HEIGHT)
+#define YPOS_FRAMETYPE    (MENUITEM_FRAMETYPE * MENUITEM_HEIGHT)
+#define YPOS_EXPSHARE     (MENUITEM_EXPSHARE * MENUITEM_HEIGHT)
 
 static void Task_OptionMenuFadeIn(u8 taskId);
 static void Task_OptionMenuProcessInput(u8 taskId);
@@ -66,6 +73,8 @@ static u8 FrameType_ProcessInput(u8 selection);
 static void FrameType_DrawChoices(u8 selection);
 static u8 ButtonMode_ProcessInput(u8 selection);
 static void ButtonMode_DrawChoices(u8 selection);
+static u8 ExpShare_ProcessInput(u8 selection);
+static void ExpShare_DrawChoices(u8 selection);
 static void DrawHeaderText(void);
 static void DrawOptionMenuTexts(void);
 static void DrawBgWindowFrames(void);
@@ -87,6 +96,8 @@ static const u8 gText_FrameTypeNumber[]    = _("{COLOR GREEN}{SHADOW LIGHT_GREEN
 static const u8 gText_ButtonTypeNormal[]   = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}NORMAL");
 static const u8 gText_ButtonTypeLR[]       = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}LR");
 static const u8 gText_ButtonTypeLEqualsA[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}L=A");
+static const u8 sText_ExpShareOn[]         = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}ON");
+static const u8 sText_ExpShareOff[]        = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}OFF");
 
 static const u16 sOptionMenuText_Pal[] = INCBIN_U16("graphics/interface/option_menu_text.gbapal");
 // note: this is only used in the Japanese release
@@ -100,6 +111,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_SOUND]       = COMPOUND_STRING("SOUND"),
     [MENUITEM_BUTTONMODE]  = COMPOUND_STRING("BUTTON MODE"),
     [MENUITEM_FRAMETYPE]   = COMPOUND_STRING("FRAME"),
+    [MENUITEM_EXPSHARE]    = COMPOUND_STRING("EXP SHARE"),
     [MENUITEM_CANCEL]      = COMPOUND_STRING("CANCEL"),
 };
 
@@ -250,6 +262,7 @@ void CB2_InitOptionMenu(void)
         gTasks[taskId].tSound = gSaveBlock2Ptr->optionsSound;
         gTasks[taskId].tButtonMode = gSaveBlock2Ptr->optionsButtonMode;
         gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
+        gTasks[taskId].tExpShare = FlagGet(I_EXP_SHARE_FLAG) ? 0 : 1; // 0 = ON, 1 = OFF
 
         TextSpeed_DrawChoices(gTasks[taskId].tTextSpeed);
         BattleScene_DrawChoices(gTasks[taskId].tBattleSceneOff);
@@ -257,6 +270,7 @@ void CB2_InitOptionMenu(void)
         Sound_DrawChoices(gTasks[taskId].tSound);
         ButtonMode_DrawChoices(gTasks[taskId].tButtonMode);
         FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
+        ExpShare_DrawChoices(gTasks[taskId].tExpShare);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
 
         CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
@@ -352,6 +366,13 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             if (previousOption != gTasks[taskId].tWindowFrameType)
                 FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
             break;
+        case MENUITEM_EXPSHARE:
+            previousOption = gTasks[taskId].tExpShare;
+            gTasks[taskId].tExpShare = ExpShare_ProcessInput(gTasks[taskId].tExpShare);
+
+            if (previousOption != gTasks[taskId].tExpShare)
+                ExpShare_DrawChoices(gTasks[taskId].tExpShare);
+            break;
         default:
             return;
         }
@@ -373,6 +394,11 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
 
+    if (gTasks[taskId].tExpShare == 0)
+        FlagSet(I_EXP_SHARE_FLAG);
+    else
+        FlagClear(I_EXP_SHARE_FLAG);
+
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
 }
@@ -390,7 +416,7 @@ static void Task_OptionMenuFadeOut(u8 taskId)
 static void HighlightOptionMenuItem(u8 index)
 {
     SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(16, DISPLAY_WIDTH - 16));
-    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(index * 16 + 40, index * 16 + 56));
+    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(index * MENUITEM_HEIGHT + 40, index * MENUITEM_HEIGHT + 54));
 }
 
 static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
@@ -631,6 +657,29 @@ static void ButtonMode_DrawChoices(u8 selection)
     DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
 }
 
+static u8 ExpShare_ProcessInput(u8 selection)
+{
+    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+    {
+        selection ^= 1;
+        sArrowPressed = TRUE;
+    }
+
+    return selection;
+}
+
+static void ExpShare_DrawChoices(u8 selection)
+{
+    u8 styles[2];
+
+    styles[0] = 0;
+    styles[1] = 0;
+    styles[selection] = 1;
+
+    DrawOptionMenuChoice(sText_ExpShareOn, 104, YPOS_EXPSHARE, styles[0]);
+    DrawOptionMenuChoice(sText_ExpShareOff, GetStringRightAlignXOffset(FONT_NORMAL, sText_ExpShareOff, 198), YPOS_EXPSHARE, styles[1]);
+}
+
 static void DrawHeaderText(void)
 {
     FillWindowPixelBuffer(WIN_HEADER, PIXEL_FILL(1));
@@ -644,7 +693,7 @@ static void DrawOptionMenuTexts(void)
 
     FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
     for (i = 0; i < MENUITEM_COUNT; i++)
-        AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, (i * MENUITEM_HEIGHT) + 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
 }
 
