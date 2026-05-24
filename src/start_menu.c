@@ -569,7 +569,7 @@ static void InitStartMenu(void)
 static void StartMenuTask(u8 taskId)
 {
     // Curvelocke QoL: spin through every InitStartMenuStep state in a single frame
-    // instead of one per frame, so START opens the menu instantly.
+    // so START opens the menu instantly.
     while (InitStartMenuStep() != TRUE)
         ;
     SwitchTaskToFollowupFunc(taskId);
@@ -1010,7 +1010,7 @@ static void HideSaveInfoWindow(void)
 
 static void SaveStartTimer(void)
 {
-    sSaveDialogTimer = 60;
+    sSaveDialogTimer = 20; // Curvelocke QoL: post-save auto-dismiss cut from 60 to 20 frames.
 }
 
 static bool8 SaveSuccesTimer(void)
