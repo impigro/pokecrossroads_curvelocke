@@ -5295,8 +5295,11 @@ static void SetUpScrollToBox(u8 boxId)
 {
     s8 direction = DetermineBoxScrollDirection(boxId);
 
-    sStorage->scrollSpeed = (direction > 0) ? 6 : -6;
-    sStorage->scrollTimer = 32;
+    // Curvelocke QoL: 2x box scroll. Double scrollSpeed AND halve scrollTimer so
+    // total bg2_X displacement (timer * speed) stays equal to the original 32 * 6 = 192 px.
+    // Doubling only speed scrolls twice as far and corrupts BG2 offset on PC exit.
+    sStorage->scrollSpeed = (direction > 0) ? 12 : -12;
+    sStorage->scrollTimer = 16;
 
     sStorage->scrollToBoxId = boxId;
     sStorage->scrollDirection = direction;
@@ -5992,10 +5995,11 @@ static void InitCursorMove(void)
 {
     int yDistance, xDistance;
 
+    // Curvelocke QoL: halved cursor move steps so PC navigation is twice as snappy.
     if (sStorage->cursorVerticalWrap != 0 || sStorage->cursorHorizontalWrap != 0)
-        sStorage->cursorMoveSteps = 12;
-    else
         sStorage->cursorMoveSteps = 6;
+    else
+        sStorage->cursorMoveSteps = 3;
 
     if (sStorage->cursorFlipTimer)
         sStorage->cursorFlipTimer = sStorage->cursorMoveSteps >> 1;
