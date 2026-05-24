@@ -1012,22 +1012,10 @@ void ChooseStarter(void)
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
-    u8 i;
-    u8 iv;
 
     *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
     starterMon = GetStarterPokemon(gSpecialVar_Result);
     ScriptGiveMon(starterMon, 5, ITEM_NONE);
-
-    // Curvelocke: high-floor IVs for the starter. Each IV rolls in [20,31] so a
-    // bad RNG starter can't softlock the first trainer under the no-grind rule.
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        iv = 20 + (Random() % 12);
-        SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP_IV + i, &iv);
-    }
-    CalculateMonStats(&gParties[B_TRAINER_1][0]);
-
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
