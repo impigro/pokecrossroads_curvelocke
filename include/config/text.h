@@ -11,7 +11,7 @@
 #define TEXT_SPEED_MEDIUM_MODIFIER   1       // How fast the MID text speed option prints
 #define TEXT_SPEED_FAST_MODIFIER     1       // How fast the FAST text speed option prints
 #define TEXT_SPEED_INSTANT_MODIFIER  12      // Needed only for the animation delays
-#define TEXT_SPEED_INSTANT           TRUE    // Renders all text as fast as it can, basically instant. Overrides FLAG_TEXT_SPEED_INSTANT and in-game player options menu setting.
+#define TEXT_SPEED_INSTANT           FALSE   // Curvelocke: disabled; the Options menu's TEXT SPEED entry (FAST/INSTANT) is now the source of truth, defaulting to INSTANT for new saves.
 
 // Text speed flag:
 #define FLAG_TEXT_SPEED_INSTANT      0       // Use this if you want to toggle instant text speed

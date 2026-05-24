@@ -1106,7 +1106,8 @@ static void Task_Intro(u8 taskId)
     if (gTasks[taskId].tState == 0)
     {
         gTasks[taskId].tState++;
-        CreateIntroTask(0, 0, 3, 2, 2);
+        // Curvelocke QoL: gray-flash increments 2 -> 4 halves the pre-transition flash from ~0.8s to ~0.4s.
+        CreateIntroTask(0, 0, 3, 4, 4);
     }
     else if (IsIntroTaskDone())
     {

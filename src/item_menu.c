@@ -809,7 +809,7 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 20:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        BeginNormalPaletteFade(PALETTES_ALL, -2, 16, 0, RGB_BLACK); // Curvelocke QoL: fast fade
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
         break;
@@ -1103,7 +1103,7 @@ static void FreeBagMenu(void)
 
 void Task_FadeAndCloseBagMenu(u8 taskId)
 {
-    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    BeginNormalPaletteFade(PALETTES_ALL, -2, 0, 16, RGB_BLACK); // Curvelocke QoL: fast fade
     gTasks[taskId].func = Task_CloseBagMenu;
 }
 

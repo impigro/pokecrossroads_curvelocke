@@ -158,17 +158,20 @@ static const struct SpriteFrameImage sSpriteImages_Emoticons[] = {
     {sGfx_Emoticons + 0x380, 0x80},
 };
 
+// Curvelocke QoL: trainer-see "!" hold cut from 52 -> 20 frames (~0.33s vs ~0.87s).
+// Only the trainer-encounter emotes are sped up; the generic ones below (X / Smiley /
+// QuestionMark) are used by NPC dialog reactions and keep their original timing.
 static const union AnimCmd sAnimCmd_ExclamationMark1[] = {
     ANIMCMD_FRAME( 0,  4),
     ANIMCMD_FRAME( 1,  4),
-    ANIMCMD_FRAME( 2, 52),
+    ANIMCMD_FRAME( 2, 20),
     ANIMCMD_END
 };
 
 static const union AnimCmd sAnimCmd_DoubleExclMark[] = {
     ANIMCMD_FRAME( 6,  4),
     ANIMCMD_FRAME( 7,  4),
-    ANIMCMD_FRAME( 8, 52),
+    ANIMCMD_FRAME( 8, 20),
     ANIMCMD_END
 };
 

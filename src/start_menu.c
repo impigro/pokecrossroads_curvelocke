@@ -545,7 +545,8 @@ static bool32 InitStartMenuStep(void)
         sInitStartMenuData[0]++;
         break;
     case 4:
-        if (PrintStartMenuActions(&sInitStartMenuData[1], 2))
+        // Curvelocke QoL: print all start menu actions in one call instead of 2/frame.
+        if (PrintStartMenuActions(&sInitStartMenuData[1], sNumStartMenuActions))
             sInitStartMenuData[0]++;
         break;
     case 5:
@@ -567,8 +568,11 @@ static void InitStartMenu(void)
 
 static void StartMenuTask(u8 taskId)
 {
-    if (InitStartMenuStep() == TRUE)
-        SwitchTaskToFollowupFunc(taskId);
+    // Curvelocke QoL: spin through every InitStartMenuStep state in a single frame
+    // instead of one per frame, so START opens the menu instantly.
+    while (InitStartMenuStep() != TRUE)
+        ;
+    SwitchTaskToFollowupFunc(taskId);
 }
 
 static void CreateStartMenuTask(TaskFunc followupFunc)
@@ -583,10 +587,9 @@ static void CreateStartMenuTask(TaskFunc followupFunc)
 
 static bool8 FieldCB_ReturnToFieldStartMenu(void)
 {
-    if (InitStartMenuStep() == FALSE)
-    {
-        return FALSE;
-    }
+    // Curvelocke QoL: run the full init in one frame here too.
+    while (InitStartMenuStep() == FALSE)
+        ;
 
     ReturnToFieldOpenStartMenu();
     return TRUE;
@@ -665,7 +668,7 @@ static bool8 HandleStartMenuInput(void)
             && gMenuCallback != StartMenuSafariZoneRetireCallback
             && gMenuCallback != StartMenuBattlePyramidRetireCallback)
         {
-           FadeScreen(FADE_TO_BLACK, 0);
+           FadeScreen(FADE_TO_BLACK, -2); // Curvelocke QoL: ~4-frame fade instead of 16.
         }
 
         return FALSE;
