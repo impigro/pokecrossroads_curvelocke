@@ -301,7 +301,12 @@ static void Task_BattleStart(u8 taskId)
                 GetMonData(GetFirstLiveMon(), MON_DATA_NICKNAME, gStringVar1);
                 ScriptContext_SetupScript(EventScript_CurvelockeDodged);
                 SetMainCallback2(CB2_ReturnToField);
-                gFieldCallback = FieldCB_ContinueScriptHandleMusic;
+                // Crossfade battle BGM back to map music instead of hard-restarting
+                // it (the default field-reentry callback would PlayNewMapMusic the
+                // overworld track from frame 0, which sounds like a "blip" after
+                // a skipped encounter).
+                FadeOutAndFadeInNewMapMusic(GetCurrLocationDefaultMusic(), 4, 8);
+                gFieldCallback = FieldCB_ContinueScript;
                 RestartWildEncounterImmunitySteps();
                 ClearPoisonStepCounter();
                 DestroyTask(taskId);
