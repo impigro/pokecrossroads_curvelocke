@@ -32,6 +32,15 @@ That's the entire challenge. Everything else in this fork is QoL.
 
 ---
 
+## Crossroads tweaks for Curvelocke
+
+Small adjustments to Crossroads' base content that keep the no-grind rule playable from a fresh save.
+
+- **Starter STAB at lv6** — Pokémon Crossroads uses Gen 9 / Scarlet-Violet learnsets game-wide, which gave most starters their primary-type damaging move at lv3-4 and made the first rival fight unwinnable under the no-grind rule. All nine starters (Hoenn, Kanto, Johto) now learn their STAB at lv6, mirroring the Johto trio's schedule. The first rival's lv5 starter also no longer has STAB, restoring Route 103 to a clean stat check.
+- **Starter IVs floored at 15** — every IV on the starter rolls in [15, 31] instead of [0, 31], preserving run-to-run variance while preventing softlocks from a bad-roll starter.
+
+---
+
 ## Quality-of-life modifications
 
 These are independent of the Curvelocke challenge — tweaks to make the game feel responsive enough that you don't need an emulator speed multiplier.
@@ -82,6 +91,8 @@ Requires devkitARM (15.2.0 is known good). See upstream Crossroads' [INSTALL.md]
 ---
 
 ## Credits
+
+See [CURVELOCKE_CHANGELOG.md](CURVELOCKE_CHANGELOG.md) for a full list of changes per patch.
 
 Curvelocke Crossroads stands on the work of many others.
 
