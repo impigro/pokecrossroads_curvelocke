@@ -59,6 +59,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "fishing.h"
+#include "pokemon_icon.h"
 
 enum TransitionType
 {
@@ -266,6 +267,47 @@ static bool32 Curvelocke_FollowerOutspeedsWild(void)
          > GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPEED);
 }
 
+// Curvelocke QoL: centered blinking species icon + cry on wild encounter trigger,
+// so the player can see *which* mon they're about to fight while deciding whether
+// to B-skip the transition.
+// BSS (zero-init) — this TU's .data gets discarded by the linker, so avoid initializers here.
+static bool8 sCurvelockeEncIconActive;
+static u8 sCurvelockeEncIconSpriteId;
+
+static void SpriteCB_CurvelockeEncIcon(struct Sprite *sprite)
+{
+    sprite->data[0]++;
+    if ((sprite->data[0] & 7) == 0)
+        sprite->invisible ^= 1;
+}
+
+static void Curvelocke_SpawnEncounterIcon(void)
+{
+    enum Species species = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
+    u8 id;
+
+    PlayCry_Normal(species, 0);
+
+    if (sCurvelockeEncIconActive)
+        return;
+    LoadMonIconPalette(species);
+    id = CreateMonIconNoPersonality(species, SpriteCB_CurvelockeEncIcon, 120, 56, 0);
+    if (id == MAX_SPRITES)
+        return;
+    sCurvelockeEncIconSpriteId = id;
+    sCurvelockeEncIconActive = TRUE;
+    gSprites[id].oam.priority = 0;
+}
+
+static void Curvelocke_DespawnEncounterIcon(void)
+{
+    if (!sCurvelockeEncIconActive)
+        return;
+    FreeAndDestroyMonIconSprite(&gSprites[sCurvelockeEncIconSpriteId]);
+    FreeMonIconPalettes();
+    sCurvelockeEncIconActive = FALSE;
+}
+
 static void Task_BattleStart(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -286,6 +328,8 @@ static void Task_BattleStart(u8 taskId)
     case 0:
         if (!FldEffPoison_IsActive()) // is poison not active?
         {
+            if (Curvelocke_IsEncounterSkippable())
+                Curvelocke_SpawnEncounterIcon();
             BattleTransition_StartOnField(tTransition);
             ClearMirageTowerPulseBlendEffect();
             tState++; // go to case 1.
@@ -296,6 +340,7 @@ static void Task_BattleStart(u8 taskId)
         {
             if (tCurvelockeBSkipped)
             {
+                Curvelocke_DespawnEncounterIcon();
                 gBattleTypeFlags = 0;
                 gIsFishingEncounter = FALSE;
                 GetMonData(GetFirstLiveMon(), MON_DATA_NICKNAME, gStringVar1);
@@ -312,6 +357,7 @@ static void Task_BattleStart(u8 taskId)
                 DestroyTask(taskId);
                 return;
             }
+            Curvelocke_DespawnEncounterIcon();
             PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
