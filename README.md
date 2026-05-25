@@ -32,15 +32,6 @@ That's the entire challenge. Everything else in this fork is QoL.
 
 ---
 
-## Crossroads tweaks for Curvelocke
-
-Small adjustments to keep the no-grind rule playable from a fresh save.
-
-- **Starter STAB at lv6** — unified across all nine starters, so the first rival fight stays a clean stat check.
-- **Starter IVs floored at 15** — prevents bad-roll softlocks while keeping run-to-run variance.
-
----
-
 ## Quality-of-life modifications
 
 These are independent of the Curvelocke challenge — tweaks to make the game feel responsive enough that you don't need an emulator speed multiplier.
@@ -64,6 +55,15 @@ During the wild encounter transition animation, **hold B** to cancel the battle 
 | **Text speed: Fast / Instant only** | The Options "TEXT SPEED" row drops Slow/Mid; only Fast and Instant remain. |
 | **Shorter post-save confirmation** | "{PLAYER} saved the game!" auto-dismisses after ~0.33s instead of ~1s. A button still skips early; the safety "don't turn off" message during the actual write is preserved. |
 | **2× PC box navigation** | Cursor movement and box-scroll speed doubled in the PC. |
+
+---
+
+## Crossroads tweaks for Curvelocke
+
+Small adjustments to keep the no-grind rule playable from a fresh save.
+
+- **Starter STAB at lv6** — unified across all nine starters, so the first rival fight stays a clean stat check.
+- **Starter IVs floored at 15** — prevents bad-roll softlocks while keeping run-to-run variance.
 
 ---
 
