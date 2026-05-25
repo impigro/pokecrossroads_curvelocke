@@ -1017,10 +1017,24 @@ void ChooseStarter(void)
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
+    u8 i;
+    u8 iv;
 
     *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
     starterMon = GetStarterPokemon(gSpecialVar_Result);
     ScriptGiveMon(starterMon, 5, ITEM_NONE);
+
+    // Curvelocke: floor each starter IV at 15 (range [15, 31]). Under Rule 1
+    // (no-grind XP) a starter with bad rolls can become unwinnable against the
+    // first rival even with the lv6 STAB delay; flooring guarantees a viable
+    // baseline without removing variance.
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        iv = 15 + (Random() % 17);
+        SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP_IV + i, &iv);
+    }
+    CalculateMonStats(&gParties[B_TRAINER_1][0]);
+
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
