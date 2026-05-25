@@ -59,19 +59,13 @@ During the wild encounter transition animation, **hold B** to cancel the battle 
 
 ## How to play
 
-You will need a legally-obtained copy of **Pokémon Emerald (U)** (USA version, `.gba`).
+There are **no pre-built patches or releases** for this fork — please support the upstream Crossroads team by [playing their official release](https://github.com/eonlynx/pokecrossroads/releases).
 
-1. Download the latest `.ups` patch from the [Releases section](#) *(coming soon)*.
-2. Go to https://www.marcrobledo.com/RomPatcher.js/legacy/
-3. Click "ROM file" and upload your **Pokemon - Emerald Version (U).gba**.
-4. Click "Patch file" and upload the Crossroads Curvelocke `.ups`.
-5. Wait for the green checkmark, click "Apply patch", and save the resulting `.gba`.
-
-Play on your favorite GBA emulator — **[mGBA](https://mgba.io/)** is recommended for accuracy.
+If you specifically want to try the Curvelocke ruleset on top of Crossroads, you can build the ROM from source — see below.
 
 ---
 
-## For developers — building from source
+## Building from source
 
 This fork is built directly on Crossroads Beta 1.4 (`e05c8286`). The Crossroads build chain is preserved unchanged.
 
@@ -98,9 +92,9 @@ Curvelocke Crossroads stands on the work of many others.
 
 ---
 
-## License & redistribution
+## License
 
-This is a personal fork for personal use. It is not for redistribution. If you want to play Pokémon Crossroads, please get it from [the official Crossroads repository](https://github.com/eonlynx/pokecrossroads) and support the original developers.
+This is a personal fork. Upstream Crossroads ships without a formal license, so this fork carries no formal license either — do what you want with the code. The polite ask: if you want to play Pokémon Crossroads, get it from the [official Crossroads repository](https://github.com/eonlynx/pokecrossroads) and support the original developers.
 
 ---
 
