@@ -70,7 +70,7 @@ If you specifically want to try the Curvelocke ruleset on top of Crossroads, you
 This fork is built directly on Crossroads Beta 1.4 (`e05c8286`). The Crossroads build chain is preserved unchanged.
 
 ```bash
-git clone https://github.com/josimarcos/pokecrossroads_curvelocke.git
+git clone https://github.com/impigro/pokecrossroads_curvelocke.git
 cd pokecrossroads_curvelocke
 make modern -j$(nproc)
 ```
