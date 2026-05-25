@@ -1,144 +1,111 @@
-![Pokémon Crossroads Logo](crossroads_logo.png)
+<p align="center">
+  <img src="curvelocke_logo.png" alt="Pokémon Crossroads Curvelocke" width="500"/>
+</p>
 
-# Pokémon Crossroads
+# Pokémon Crossroads Curvelocke
 
-**Pokémon Crossroads** is a ROM hack of *Pokémon Emerald* developed by the **Crossroads Dev Team**.  
-It combines the regions of **Hoenn**, **Kanto**, and (in development) **Johto** into one seamless, epic adventure — the kind of ultimate Game Boy Advance experience Game Freak might have created if they had merged these regions back in the day.
+**Pokémon Crossroads Curvelocke** is a fork of [Pokémon Crossroads Beta 1.4](https://github.com/eonlynx/pokecrossroads), a ROM hack of *Pokémon Emerald* developed by the Crossroads Dev Team.
 
-Discussion thread:  
-https://www.pokecommunity.com/threads/pok%C3%A9mon-crossroads-kanto-johto-and-hoenn-joined.536507/
+This fork adds the **Curvelocke** challenge ruleset on top of Crossroads, plus a suite of quality-of-life modifications. It does not change trainers, encounters, Pokémon, moves, abilities, story, or maps — Crossroads is left intact. Curvelocke is purely a set of mechanical modifications.
 
-## New Discord Link!
-You can join our Discord community with this link: https://discord.gg/ReWmTP86Ap
+> Upstream Crossroads README is preserved in commit history. For the original project — story, regions, dev team, contributing — visit the [main repository](https://github.com/eonlynx/pokecrossroads).
 
-## Beta 1.4 – Now Available! (April 25, 2026)
+---
 
-The **Beta 1.4** release is live and ready to play.  
-Download the .ups patch file from the [Releases section on GitHub](https://github.com/eonlynx/pokecrossroads/releases).
+## What is Curvelocke?
 
-Main devs:
-- eonlynx
-- justgoose
+Curvelocke is a challenge mode where **wild Pokémon weaker than yours grant no experience**. The goal is to remove grinding as a problem-solving tool and force the player to plan: pick the right trainer fights, manage party levels, build teams that can handle what's in front of them.
 
-Special thanks to:
-- The pokeemerald-expansion team
+I first tried Curvelocke on Pokémon Crystal and quickly ran into a softlock — running out of XP sources in a linear region with no way to backtrack to fresh trainers. Looking for a more open-world Pokémon experience that wouldn't dead-end the run, I found **Crossroads**: three connected regions (Hoenn, Kanto, Sevii) with PokéCenter cross-map jumps that keep trainer fights plentiful no matter where you are. A natural fit.
 
-![Pokémon Crossroads Layout](crossroads_layout.jpeg)
+---
 
-### Key Features in Beta 1.4
+## The Curvelocke rule
 
-- Three fully explorable regions: **Hoenn**, **Kanto**, and the **Sevii Islands**.
-- Dual complete storylines: Play through the full stories of *Pokémon Emerald* and *Pokémon FireRed* — in any order you choose.
-- **16 Gym Badges** total (8 from Hoenn + 8 from Kanto), with a major surprise planned for Beta 2.0.
+**No-grind XP.** A defeated wild Pokémon whose level is **strictly lower than** the recipient's level grants **zero XP**.
 
-### Known Issues
+- Checked per-recipient (active battler and any EXP Share recipient evaluated independently).
+- **Trainer battles are unaffected** — trainers remain the player's legitimate XP source.
+- Catching a Pokémon follows the same rule.
 
-- **Trainer Card**: Kanto badges do not currently appear on your Trainer ID card.
-- **Regional Travel**: Travel between Kanto and Hoenn via the Pokémon Centers in **Viridian City** or **Oldale Town**.
-- **Save Compatibility**: Existing *Pokémon Emerald* save files are **not compatible** due to expanded memory allocation. Old saves are unlikely to ever work.
-- Some specific items ported from *FireRed* are currently non-functional.
+That's the entire challenge. Everything else in this fork is QoL.
 
-### What's Coming in Beta 2.0?
+---
 
-(Clue [here](https://www.pokecommunity.com/threads/pok%C3%A9mon-crossroads-kanto-johto-and-hoenn-joined.536507/) – keeping the mystery as in the original announcement)
+## Quality-of-life modifications
 
-## Story
+These are independent of the Curvelocke challenge — tweaks to make the game feel responsive enough that you don't need an emulator speed multiplier.
 
-What if Game Freak had built the ultimate Game Boy Advance Pokémon adventure?
+### Press B to skip wild encounters
+During the wild encounter transition animation, **hold B** to cancel the battle and return to the overworld — *if* your lead follower Pokémon outspeeds the wild one.
+- Speed gate uses the follower's actual battle Speed stat (level + IVs + EVs + nature + items). Strict greater-than; equal speed means no skip.
+- The follower is the first alive non-egg party member — reorder your party to choose your "scout."
+- **Exempt** (always unskippable): roaming legendaries, fishing encounters, scripted/static encounters.
 
-**Pokémon Crossroads** lets you step into the shoes of a young trainer journeying across not just Hoenn, but also Kanto and (coming soon) Johto — all connected seamlessly into one grand storyline.  
-Built on the powerful **pokeemerald-expansion** engine, we've integrated systems to bring these worlds to life authentically.
+### Other QoL tweaks
 
-## How to Patch the ROM (Play the Beta)
+| QoL | Change |
+|---|---|
+| **Modern EXP Share toggle** | Adds an EXP Share entry to the Options menu. When **ON**, every alive non-egg party member shares XP (Gen 6+ behavior). When **OFF** (default for new games), XP behaves like vanilla Crossroads. Toggle freely at any time. |
+| **Faster overworld movement** | Walking ~1.78×, running and biking ~1.25× faster than vanilla. Animations rescaled to match. |
+| **Skip battle intro slide** | The slide-in animation at the start of every battle is skipped. |
+| **Halved warp fades** | Door and map transitions fade in/out twice as fast. |
+| **Snappier menus, fades, and battle transitions** | Start menu opens in one frame; party/bag/menu-selection fades twice as fast; trainer-spot "!" cuts from 52 to 20 frames; battle gray-flash twice as fast. |
+| **Text speed: Fast / Instant only** | The Options "TEXT SPEED" row drops Slow/Mid; only Fast and Instant remain. |
+| **Shorter post-save confirmation** | "{PLAYER} saved the game!" auto-dismisses after ~0.33s instead of ~1s. A button still skips early; the safety "don't turn off" message during the actual write is preserved. |
+| **2× PC box navigation** | Cursor movement and box-scroll speed doubled in the PC. |
 
-You will need a legally obtained copy of **Pokémon Emerald (U)** (USA version, .gba file).
+---
 
-1. Go to: https://www.marcrobledo.com/RomPatcher.js/legacy/
-2. Click "ROM file" and upload your **Pokemon - Emerald Version (U).gba**
-3. Click "Patch file" and upload the **pokemon_crossroads_beta1.4.ups** file from our Releases
-4. Wait for the green checkmark to appear
-5. Click "Apply patch"
-6. The patched ROM (**pokemon_crossroads_beta1.4.gba**) will download automatically
+## How to play
 
-Play the resulting .gba file on your favorite GBA emulator.
+You will need a legally-obtained copy of **Pokémon Emerald (U)** (USA version, `.gba`).
 
-## Recommended Emulators
+1. Download the latest `.ups` patch from the [Releases section](#) *(coming soon)*.
+2. Go to https://www.marcrobledo.com/RomPatcher.js/legacy/
+3. Click "ROM file" and upload your **Pokemon - Emerald Version (U).gba**.
+4. Click "Patch file" and upload the Crossroads Curvelocke `.ups`.
+5. Wait for the green checkmark, click "Apply patch", and save the resulting `.gba`.
 
-- **PC / Mac / Linux**: [mGBA](https://mgba.io/) (highly recommended — best accuracy and debugging)
-- **Android**: Pizza Boy GBA, Lemuroid, or RetroArch (with mGBA core)
-- **iOS**: Delta, RetroArch (with mGBA core), or Ignited
-- **Handhelds** (Steam Deck, Anbernic, etc.): RetroArch with mGBA core
+Play on your favorite GBA emulator — **[mGBA](https://mgba.io/)** is recommended for accuracy.
 
-## For Developers – How to Compile
+---
 
-This project is based on **pokeemerald-expansion** with custom multi-region features.
+## For developers — building from source
 
-### Requirements
-- devkitARM (version 65 or older recommended for compatibility)
-- git, make, python3, and other standard build tools
+This fork is built directly on Crossroads Beta 1.4 (`e05c8286`). The Crossroads build chain is preserved unchanged.
 
-### Steps
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/eonlynx/pokecrossroads.git
-   cd pokecrossroads
-   ```
-2. (Optional but recommended) Initialize submodules if any are present:
-   ```bash
-   git submodule update --init --recursive
-   ```
-3. Build using the modern compiler:
-   ```bash
-   make modern
-   ```
-   - This produces `poke_crossroads.gba` in the project root.
-   - Use `make clean` first if you want to rebuild from scratch.
+```bash
+git clone https://github.com/josimarcos/pokecrossroads_curvelocke.git
+cd pokecrossroads_curvelocke
+make modern -j$(nproc)
+```
 
-For full setup details check [INSTALL.md](INSTALL.md).
+Output: `pokeemerald.gba` in the project root.
 
-**Note**: This project is not yet compatible with the latest Porymap versions. Use **Porymap 5** for mapping work.
+Requires devkitARM (15.2.0 is known good). See upstream Crossroads' [INSTALL.md](INSTALL.md) for full toolchain setup.
 
-## Current Progress
-
-Development is moving steadily!
-
-Completed core systems:
-
-- ✅ Region switching: Seamless transitions between Hoenn, Kanto, and Johto with proper flag handling.
-- ✅ Map integration: All major Kanto overworlds ported and functional with *FireRed* layouts and palettes.
-- ✅ Multi-region minimaps: Each region displays its own map in the AreaNav with correct location names.
-- ✅ Updated Fly system: Respects your current region and available landing points without cross-region bugs.
-
-Current focus: Porting events, scripts, gym logic, dialogues, and cutscenes from Johto and Kanto into the Emerald engine.
-
-**Actively looking for scripters and event designers** familiar with Gen III decompilation!
-
-## Team & Help Wanted
-
-Building a four-region adventure is a massive project.  
-If you're a scripter, mapper, composer, or programmer, we'd love your help.
-
-To contribute:
-- Fork / join the repository: [https://github.com/eonlynx/pokecrossroads](https://github.com/eonlynx/pokecrossroads)
-- Join the discussion: [PokeCommunity Thread](https://www.pokecommunity.com/threads/pok%C3%A9mon-crossroads-kanto-johto-and-hoenn-joined.536507/)
-- Join the community: [Discord Server](https://discord.gg/ReWmTP86Ap)
+---
 
 ## Credits
 
-- **Game Base**: pokeemerald-expansion by rh-hideout.
-- **Engine Logic**: cawtds for importing FireRed logic into Emerald.
-- **Travel System**: AsparagusEduardo for fixing Kanto/Hoenn travel.
-- **Sprites**: @h y o for Gold / Ethan sprites.
-- **Community**: Special thanks to the decompilation and ROM hacking communities.
+Curvelocke Crossroads stands on the work of many others.
 
-Full and continuously updated credits available on the [GitHub repository](https://github.com/eonlynx/pokecrossroads).
+- **[Pokémon Crossroads](https://github.com/eonlynx/pokecrossroads)** — eonlynx, justgoose, and the Crossroads Dev Team. The base ROM hack this fork is built on.
+- **[pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion)** — rh-hideout. The engine Crossroads is built on, which already includes the Gen 6+ EXP Share plumbing this fork hooks into.
+- **pret** — the pokeemerald decompilation that makes all of this possible.
+- **Crossroads' upstream credits** (cawtds, AsparagusEduardo, @h y o, and the broader decompilation community) carry over in full — see the [original Crossroads README](https://github.com/eonlynx/pokecrossroads/blob/main/README.md).
 
-## Reporting Bugs
+---
 
-Please report all issues, glitches, or oddities on the [GitHub Issues page](https://github.com/eonlynx/pokecrossroads/issues).  
-You can also post in the [PokeCommunity thread](https://www.pokecommunity.com/threads/pok%C3%A9mon-crossroads-kanto-johto-and-hoenn-joined.536507/).
+## License & redistribution
 
-Your feedback helps make the project better!
+This is a personal fork for personal use. It is not for redistribution. If you want to play Pokémon Crossroads, please get it from [the official Crossroads repository](https://github.com/eonlynx/pokecrossroads) and support the original developers.
 
-Thanks for playing **Pokémon Crossroads**!  
-Enjoy the journey across the regions!
+---
+
+## Reporting bugs
+
+Curvelocke-specific bugs (XP rule, encounter skip, EXP Share toggle, QoL mods): open an issue on this fork.
+
+Crossroads bugs: report upstream at [eonlynx/pokecrossroads/issues](https://github.com/eonlynx/pokecrossroads/issues).
