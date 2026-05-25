@@ -34,10 +34,10 @@ That's the entire challenge. Everything else in this fork is QoL.
 
 ## Crossroads tweaks for Curvelocke
 
-Small adjustments to Crossroads' base content that keep the no-grind rule playable from a fresh save.
+Small adjustments to keep the no-grind rule playable from a fresh save.
 
-- **Starter STAB at lv6** — Pokémon Crossroads uses Gen 9 / Scarlet-Violet learnsets game-wide, which gave most starters their primary-type damaging move at lv3-4 and made the first rival fight unwinnable under the no-grind rule. All nine starters (Hoenn, Kanto, Johto) now learn their STAB at lv6, mirroring the Johto trio's schedule. The first rival's lv5 starter also no longer has STAB, restoring Route 103 to a clean stat check.
-- **Starter IVs floored at 15** — every IV on the starter rolls in [15, 31] instead of [0, 31], preserving run-to-run variance while preventing softlocks from a bad-roll starter.
+- **Starter STAB at lv6** — unified across all nine starters, so the first rival fight stays a clean stat check.
+- **Starter IVs floored at 15** — prevents bad-roll softlocks while keeping run-to-run variance.
 
 ---
 
@@ -49,6 +49,7 @@ These are independent of the Curvelocke challenge — tweaks to make the game fe
 During the wild encounter transition animation, **hold B** to cancel the battle and return to the overworld — *if* your lead follower Pokémon outspeeds the wild one.
 - Speed gate uses the follower's actual battle Speed stat (level + IVs + EVs + nature + items). Strict greater-than; equal speed means no skip.
 - The follower is the first alive non-egg party member — reorder your party to choose your "scout."
+- The wild Pokémon's cry plays and its icon blinks at the center of the screen the moment the encounter triggers, so you can identify what you're about to fight before deciding to cancel — if you're quick enough.
 - **Exempt** (always unskippable): roaming legendaries, fishing encounters, scripted/static encounters.
 
 ### Other QoL tweaks
